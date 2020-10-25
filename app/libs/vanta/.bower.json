@@ -1,0 +1,14 @@
+{
+  "name": "vanta",
+  "homepage": "https://github.com/tengbao/vanta",
+  "_release": "d8f07502dc",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d8f07502dcc81b8b545d6c8dde698b7cebe0bbcf"
+  },
+  "_source": "https://github.com/tengbao/vanta.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/tengbao/vanta.git",
+  "_direct": true
+}

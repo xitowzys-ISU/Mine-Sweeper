@@ -1,0 +1,87 @@
+@import "fonts"
+@import "libs"
+@import "vars"
+    
+html, body 
+    height: 100%
+
+body
+    background: url(../images/background.png) no-repeat center center fixed
+    margin: 0
+
+.appContainer
+    display: flex
+    flex-direction: column
+    height: 100%
+
+.game
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    height: 100%
+
+.menuGame
+    width: 600px
+    height: 100px
+    margin-top: 30px
+    background-color: white
+
+.gitlabFork 
+    height: 200px
+    width: 200px
+    margin-top: -25px
+    margin-left: -25px
+    position: absolute
+
+.grid
+    height: 600px
+    width: 600px
+    display: flex
+    flex-wrap: wrap
+    background-color: grey
+    div
+        height: 50px
+        width: 50px
+        font-size: 30px
+        text-align: center
+        font-family: 'Roboto', monospace
+        font-weight: 700
+        background-color: #20f21e
+
+.bomb
+    height: 40px
+    width: 40px
+    border: 5px solid
+    border-color: #17d032 #23ad32 #0aa30d #15d713
+    box-sizing: border-box
+
+
+.valid
+    height: 40px
+    width: 40px
+    border: 5px solid
+    border-color: #17d032 #23ad32 #0aa30d #15d713
+    box-sizing: border-box
+
+.checked
+    height: 40px
+    width: 40px
+    border: 2px solid
+    background-color: #cecab7
+    border-color: #17d032
+    box-sizing: border-box
+
+.one
+  color: #e76346
+
+.two 
+  color: #4199d3
+
+.three 
+  color: #da5757
+
+.four
+  color: #bb41d3
+
+@import "media"
