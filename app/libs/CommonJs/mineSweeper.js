@@ -6,87 +6,117 @@ document.addEventListener('DOMContentLoaded', () => {
     // Блоки
     let squares = [];
     // Количество бомб
-    let bombAmount = 30;
+    let bombAmount = 20;
+    // Игра проигранна
+    let isGameStart = false;
     // Игра проигранна
     let isGameOver = false;
     // Количество флажков
     let flags = 0;
 
+    // Генерация поля
     function createBoard() {
-        // Массив с бомбами
-        const bombsArray = Array(bombAmount).fill('bomb');
 
-        // Массив пустые поля
-        const emptyArray = Array(width * width - bombAmount).fill('valid');
+        const gameArray = Array(width * width).fill('valid');
 
-        // Объединенный массив
-        const gameArray = emptyArray.concat(bombsArray);
-
-        // Рандомизация
-        const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
-
-        // Добавление полей
+        // Добавление блоков
         for (let i = 0; i < width * width; i++) {
             const square = document.createElement('div');
             square.setAttribute('id', i);
-            square.classList.add(shuffledArray[i]);
+            square.classList.add(gameArray[i]);
             grid.appendChild(square);
             squares.push(square);
 
             square.addEventListener('click', () => click(square));
 
-            //cntrl and left click
+            // Правый клик
             square.oncontextmenu = function (e) {
                 e.preventDefault();
                 addFlag(square);
             };
-        }
-
-        // Добавление номера рядом стоящих бомб
-        for (let i = 0; i < squares.length; i++) {
-
-            // Найденные бомбы
-            let total = 0;
-
-            // Левая сторона
-            const isLeftEdge = (i % width === 0);
-
-            // Правая сторона
-            const isRightEdge = (i % width === width - 1);
-
-            if (squares[i].classList.contains('valid')) {
-                // Левая проверка
-                if (i > 0 && !isLeftEdge && squares[i - 1].classList.contains('bomb')) total++;
-
-                // Правый верхний угол
-                if (i > 11 && !isRightEdge && squares[i + 1 - width].classList.contains('bomb')) total++;
-
-                // Вверх
-                if (i > 13 && squares[i - width].classList.contains('bomb')) total++;
-
-                // Верхний левый угол
-                if (i > 12 && !isLeftEdge && squares[i - 1 - width].classList.contains('bomb')) total++;
-
-                // Вправо
-                if (i < 142 && !isRightEdge && squares[i + 1].classList.contains('bomb')) total++;
-
-                // Левый нижний угол
-                if (i < 132 && !isLeftEdge && squares[i - 1 + width].classList.contains('bomb')) total++;
-
-                // Правый нижний угол
-                if (i < 130 && !isRightEdge && squares[i + 1 + width].classList.contains('bomb')) total++;
-
-                // Вниз
-                if (i < 131 && squares[i + width].classList.contains('bomb')) total++;
-
-                squares[i].setAttribute('data', total);
-            }
         }
     }
 
     createBoard();
 
     function click(square) {
+
+        // При первом нажатии раставляет бамбы
+        if (!isGameStart) {
+            square.classList.add('checked');
+            const validClass = document.querySelectorAll(".valid:not(.checked)");
+            console.log(validClass);
+
+            for (let i = 0; i < bombAmount;) {
+                let squareId = Math.floor(Math.random() * (width * width - 1));
+                console.log(validClass[squareId]);
+
+                if (validClass[squareId].classList.contains('bomb')) {
+                    continue;
+                } else {
+                    validClass[squareId].classList.replace('valid', 'bomb');
+                    i++;
+                }
+            }
+
+            // // Добавление номера рядом стоящих бомб
+            for (let i = 0; i < squares.length; i++) {
+
+                // Найденные бомбы
+                let total = 0;
+
+                // Левая сторона
+                const isLeftEdge = (i % width === 0);
+
+                // Правая сторона
+                const isRightEdge = (i % width === width - 1);
+
+                if (squares[i].classList.contains('valid')) {
+                    // Левая проверка
+                    if (i > 0 && !isLeftEdge && squares[i - 1].classList.contains('bomb')) total++;
+
+                    // Правый верхний угол
+                    if (i > 11 && !isRightEdge && squares[i + 1 - width].classList.contains('bomb')) total++;
+
+                    // Вверх
+                    if (i > 13 && squares[i - width].classList.contains('bomb')) total++;
+
+                    // Верхний левый угол
+                    if (i > 12 && !isLeftEdge && squares[i - 1 - width].classList.contains('bomb')) total++;
+
+                    // Вправо
+                    if (i < 142 && !isRightEdge && squares[i + 1].classList.contains('bomb')) total++;
+
+                    // Левый нижний угол
+                    if (i < 132 && !isLeftEdge && squares[i - 1 + width].classList.contains('bomb')) total++;
+
+                    // Правый нижний угол
+                    if (i < 130 && !isRightEdge && squares[i + 1 + width].classList.contains('bomb')) total++;
+
+                    // Вниз
+                    if (i < 131 && squares[i + width].classList.contains('bomb')) total++;
+
+                    squares[i].setAttribute('data', total);
+                }
+
+            }
+
+            let total = square.getAttribute('data');
+
+            if (total != 0) {
+                // Цвет цифр
+                if (total == 1) square.classList.add('one');
+                if (total == 2) square.classList.add('two');
+                if (total == 3) square.classList.add('three');
+                if (total == 4) square.classList.add('four');
+
+                square.innerHTML = total;
+            } else {
+                checkSquare(square, square.id);
+            }
+            console.log("Игра началась");
+            isGameStart = true;
+        }
 
         if (isGameOver) return;
 
@@ -167,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newSquare = document.getElementById(newId);
                 click(newSquare);
             }
-        }, 20);
+        }, 10);
     }
 
     // Конец игры
@@ -175,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // result.innerHTML = 'BOOM! Game Over!';
         isGameOver = true;
 
-        //show ALL the bombs
+        //Показать все бомбы
         squares.forEach(square => {
             if (square.classList.contains('bomb')) {
                 square.innerHTML = '<img src="images/bomb.svg">';

@@ -40,6 +40,7 @@ body
     display: flex
     flex-wrap: wrap
     background-color: grey
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px
     div
         height: 50px
         width: 50px
@@ -48,6 +49,11 @@ body
         font-family: 'Roboto', monospace
         font-weight: 700
         background-color: #20f21e
+        transition: border 0.1s ease
+        &:hover
+            border: 5px solid
+            border-color: #fff #ececec #dfdfdf #f5f5f5
+            
 
 .bomb
     height: 40px
