@@ -54,7 +54,7 @@ gulp.task('common-js', function() {
 		'app/libs/CommonJs/mineSweeper.js',
 		])
 	.pipe(concat('scripts.min.js'))
-	.pipe(uglify())
+	// .pipe(uglify())
 	.pipe(gulp.dest('app/js'))
 	.pipe(browserSync.stream());
 });
