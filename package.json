@@ -22,6 +22,12 @@
     "gulp-sass": "^4.1.0",
     "gulp-uglify-es": "^2.0.0",
     "imagemin-jpeg-recompress": "^7.0.0",
-    "imagemin-pngquant": "^9.0.1"
+    "imagemin-pngquant": "^9.0.1",
+    "webpack": "^5.3.0",
+    "webpack-stream": "^6.1.0",
+    "babel-loader": "^8.1.0",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.12.1"
   }
 }

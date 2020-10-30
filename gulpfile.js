@@ -1,33 +1,40 @@
 /* Variables */
-var gulp = require('gulp'), 								//Таск-менеджер Gulp
-	sass = require('gulp-sass'), 							//Препроцессор Sass
-	browserSync = require('browser-sync'), 					//Сервер для работы и автоматического обновления страниц
-	notify = require("gulp-notify"), 						//Плагин для информирование о найденных ошибках
-	rename = require('gulp-rename'), 						//Плагин для переименования файлов
-	autoprefixer = require('gulp-autoprefixer'),			//Плагин для автоматической расстановки префиксов
-	cleanCSS = require('gulp-clean-css'),					//Плагин для минимизации CSS с использованием clean-css
-	concat = require('gulp-concat'),						//Плагин для конкатенации файлов
-	uglify = require('gulp-uglify-es').default,				//Плагин для минификации js-файлов
-	del = require('del'), 									//Плагин для удаления файлов и каталогов
-	imagemin = require('gulp-imagemin'),					//Плагин для сжатия JPEG, GIF и SVG изображений
-	cache = require('gulp-cache'), 							//Плагин для кэширования
-	imageminpngquant = require('imagemin-pngquant'),		//Плагин для сжатия PNG изображений
-	jpegrecompress = require('imagemin-jpeg-recompress');	//Плагин для сжатия JPEG
-/* Variables */
+const gulp = require('gulp'); // Таск-менеджер Gulp
+const sass = require('gulp-sass'); // Препроцессор Sass
+const browserSync = require('browser-sync'); // Сервер для работы и автоматического обновления страниц
+const notify = require("gulp-notify"); // Плагин для информирование о найденных ошибках
+const rename = require('gulp-rename'); // Плагин для переименования файлов
+const autoprefixer = require('gulp-autoprefixer'); // Плагин для автоматической расстановки префиксов
+const cleanCSS = require('gulp-clean-css'); // Плагин для минимизации CSS с использованием clean-css
+const concat = require('gulp-concat'); // Плагин для конкатенации файлов
+const del = require('del'); // Плагин для удаления файлов и каталогов
+const imagemin = require('gulp-imagemin'); // Плагин для сжатия JPEG, GIF и SVG изображений
+const cache = require('gulp-cache'); // Плагин для кэширования
+const imageminpngquant = require('imagemin-pngquant'); // Плагин для сжатия PNG изображений
+const jpegrecompress = require('imagemin-jpeg-recompress'); // Плагин для сжатия JPEG
+const uglify = require('gulp-uglify-es').default; //Плагин для минификации js-файлов
+const webpack = require('webpack');
+const webpackStream = require('webpack-stream'); // webpack с интеграцией с gulp
 
 /* Sass */
+
 gulp.task('sass', function () {
 	return gulp.src('app/sass/**/*.sass')
-		.pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
-		.pipe(rename({suffix: '.min', prefix : ''}))
+		.pipe(sass({
+			outputStyle: 'expanded'
+		}).on("error", notify.onError()))
+		.pipe(rename({
+			suffix: '.min',
+			prefix: ''
+		}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('app/css'))
 		.pipe(browserSync.stream());
 });
-/* Sass */
 
 /* Browser-sync */
+
 gulp.task('browser-sync', function () {
 	browserSync.init({
 		server: {
@@ -36,109 +43,122 @@ gulp.task('browser-sync', function () {
 		notify: false,
 	});
 });
-/* Browser-sync */
 
 /* browserSyncHTML */
-gulp.task('codeHTML', function() {
+
+gulp.task('codeHTML', function () {
 	return gulp.src('app/*.html')
-	.pipe(browserSync.stream());
+		.pipe(browserSync.stream());
 });
-/* browserSyncHTML */
 
 /* CommonJS */
-gulp.task('common-js', function() {
+
+gulp.task('common-js', function () {
 	return gulp.src([
-		'app/libs/three.js/build/three.min.js',
-		'app/libs/vanta/dist/vanta.waves.min.js',
-		'app/libs/CommonJs/vantaConfig.js',
-		'app/libs/CommonJs/mineSweeper.js',
+			'app/CommonJs/Build.js',
 		])
-	.pipe(concat('scripts.min.js'))
-	// .pipe(uglify())
-	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.stream());
+		.pipe(webpackStream(require('./webpack.config.js'), webpack))
+		// .pipe(uglify())
+		.pipe(gulp.dest('app/js'))
+		.pipe(browserSync.stream());
 });
-/* CommonJS */
 
-/* Imagemin */
-gulp.task('imagemin', function() {
-	return gulp.src('app/images/**/*')
-	.pipe(cache(imagemin([ // сжатие изображений
-		imagemin.gifsicle({ interlaced: true }),
-		jpegrecompress({
-			progressive: true,
-			max: 90,
-			min: 80
-		}),
-		imageminpngquant(),
-		imagemin.svgo({ plugins: [{ removeViewBox: false }] })
-	])))
-	.pipe(gulp.dest('dist/images/')); // выгрузка готовых файлов
-});
-/* Imagemin */
+/* libsJS */
 
-/* CodeJS */
-gulp.task('codeJS', gulp.parallel('common-js'), function() {
+gulp.task('libs-js', function () {
 	return gulp.src([
-		'app/libs/CommonJs/common.min.js', //CommonJs всегда в конце
-	])
-	.pipe(concat('scripts.min.js'))
-	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.stream());
+			'app/libsBower/three.js/build/three.min.js',
+			'app/libsBower/vanta/dist/vanta.waves.min.js',
+			'app/libsBower/vantaConfig/vantaConfig.js',
+		])
+		.pipe(gulp.dest('app/libs'))
+		.pipe(browserSync.stream());
 });
-/* CodeJS */
+
+/* Imagemin */
+
+gulp.task('imagemin', function () {
+	return gulp.src('app/images/**/*')
+		.pipe(cache(imagemin([ // сжатие изображений
+			imagemin.gifsicle({
+				interlaced: true
+			}),
+			jpegrecompress({
+				progressive: true,
+				max: 90,
+				min: 80
+			}),
+			imageminpngquant(),
+			imagemin.svgo({
+				plugins: [{
+					removeViewBox: false
+				}]
+			})
+		])))
+		.pipe(gulp.dest('dist/images/')); // выгрузка готовых файлов
+});
+
+// /* CodeJS */
+
+// gulp.task('codeJS', gulp.parallel('common-js'), function () {
+// 	return gulp.src([
+// 			'app/libs/CommonJs/common.min.js', //CommonJs всегда в конце
+// 		])
+// 		.pipe(concat('script.min.js'))
+// 		.pipe(gulp.dest('app/js'))
+// 		.pipe(browserSync.stream());
+// });
 
 /* Watch */
+
 gulp.task('watch', function () {
 	gulp.watch('app/sass/**/*.sass', gulp.parallel('sass'));
-	gulp.watch('app/libs/CommonJs/**/*.js', gulp.parallel('codeJS'));
+	gulp.watch('app/CommonJs/**/*.js', gulp.parallel('common-js'));
 	gulp.watch('app/*.html', gulp.parallel('codeHTML'));
 });
-/* Watch */
 
 /* Default (команда gulp) */
-gulp.task('default', gulp.parallel('browser-sync', 'sass', 'codeJS', 'watch'));
-/* Default (команда gulp)*/
+
+gulp.task('default', gulp.parallel('browser-sync', 'sass', 'common-js', 'libs-js', 'watch'));
 
 /* Remove dist */
-gulp.task('removedist', function() { 
+
+gulp.task('removedist', function () {
 	return del(['dist']);
 });
-/* Remove dist */
 
 /* Build Files */
+
 gulp.task('dist', function () {
 
 	var buildFiles = gulp.src([
 		'app/*.html',
-	//	'app/.htaccess',
-		]).pipe(gulp.dest('dist'));
+		//	'app/.htaccess',
+	]).pipe(gulp.dest('dist'));
 
 	var buildCss = gulp.src([
 		'app/css/main.min.css',
-		]).pipe(gulp.dest('dist/css'));
+	]).pipe(gulp.dest('dist/css'));
 
 	var buildJs = gulp.src([
 		'app/js/scripts.min.js',
-		]).pipe(gulp.dest('dist/js'));
+	]).pipe(gulp.dest('dist/js'));
 
 	var buildFonts = gulp.src([
 		'app/fonts/**/*',
-		]).pipe(gulp.dest('dist/fonts'));
+	]).pipe(gulp.dest('dist/fonts'));
 
 
-    return buildFiles, buildCss, buildJs, buildFonts;
+	return buildFiles, buildCss, buildJs, buildFonts;
 
 });
-/* Build Files */
 
 /* Built */
-gulp.task('build', gulp.series('removedist','sass', 'codeJS', 'dist', 'imagemin'));
-/* Built */
+
+gulp.task('build', gulp.series('removedist', 'sass', 'common-js', 'dist', 'imagemin'));
 
 /* Clear cache */
-gulp.task('clearcache', function () { 
-	return cache.clearAll(); 
+
+gulp.task('clearcache', function () {
+	return cache.clearAll();
 });
-/* Clear cache */
-
