@@ -21,6 +21,8 @@ export class Core {
         this.isGameOver = false;
         // Количество флажков
         this.flags = 0;
+        // Время наигранной игры
+        this.gameTime = "";
         // Доска
         this.board = document.querySelector('.grid');
         // Все ячейки на доске
@@ -132,7 +134,6 @@ export class Core {
 
         if (this.squares[boardСellY][boardСellX][1] == 'bomb') {
             this.gameOver(square);
-            console.warn('Game over');
         } else {
             let total = this.squares[boardСellY][boardСellX][2];
 
@@ -222,11 +223,36 @@ export class Core {
 
     // Добавление флага
     addFlag(square) {
-        console.log("addFlag");
+        if (!this.isGameStart) return;
+
+        // Координаты нажатой ячейки
+        let boardСellX = parseInt(square.getAttribute('data-x'));
+        let boardСellY = parseInt(square.getAttribute('data-y'));
+
+        if (this.isGameOver) return;
+
+        if (!(this.squares[boardСellY][boardСellX][1] == 'checked') && (this.flags < this.bombAmount)) {
+            if (!(this.squares[boardСellY][boardСellX][0].classList.contains("flag"))) {
+                square.classList.add('flag');
+                square.innerHTML = ' 🚩';
+                this.flags++;
+                this.checkForWin();
+            } else {
+                square.classList.remove('flag');
+                square.innerHTML = '';
+                this.flags--;
+            }
+        } else if (this.squares[boardСellY][boardСellX][0].classList.contains("flag") && (this.flags == this.bombAmount)) {
+            square.classList.remove('flag');
+            square.innerHTML = '';
+            this.flags--;
+        }
+
     }
 
     // Конец игры
     gameOver(square) {
+        this.gameTime = this.stopwatch.innerHTML;
         findTIME();
         this.isGameOver = true;
 
@@ -239,5 +265,45 @@ export class Core {
                 }
             }
         }
+        this.resultGame("fail");
+        console.debug("GAME OVER");
+    }
+
+    // Проверка выигрыша
+    checkForWin() {
+        let matches = 0;
+
+        for (let i = 0; i < this.heightBoard; i++) {
+            for (let j = 0; j < this.widthBoard; j++) {
+                if (this.squares[i][j][0].classList.contains("flag") && this.squares[i][j][1] == 'bomb') {
+                    matches++;
+                }
+            }
+        }
+
+        if (matches === this.bombAmount) {
+            this.isGameOver = true;
+            this.gameTime = this.stopwatch.innerHTML;
+            findTIME();
+            this.resultGame("win");
+        }
+    }
+
+    resultGame(result) {
+        const resultGameP = document.querySelectorAll('.resultGame > p');
+
+        document.querySelector('.resultGameContainer').style.display = 'flex';
+
+        console.log(resultGameP);
+        if(result == "win") {
+            resultGameP[0].innerHTML = "Ты выиграл";
+            resultGameP[0].style.color = "#bdffd3";
+            resultGameP[1].innerHTML = this.gameTime;
+        } else {
+            resultGameP[0].innerHTML = "Ты проиграл";
+            resultGameP[0].style.color = "#ff3300";
+            resultGameP[1].innerHTML = this.gameTime;
+        }
+
     }
 }

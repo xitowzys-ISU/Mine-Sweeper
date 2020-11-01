@@ -21,25 +21,35 @@ export class BoardControl {
                     e.preventDefault();
                     this.core.addFlag(this.core.squares[i][j][0]);
                 };
+
+                // При наведении мыши кидать фокус
+                this.core.squares[i][j][0].onmouseover = () => {
+                    this.mouseFocus(this.core.squares[i][j][0]);
+                };
             }
         }
 
     }
 
+    mouseFocus(boardСell) {
+        this.boardСellFocusX = boardСell.getAttribute('data-x');
+        this.boardСellFocusY = boardСell.getAttribute('data-y');
+
+        boardСell.focus();
+    }
+
     mouseDown(boardСell) {
         this.boardСellFocusX = boardСell.getAttribute('data-x');
         this.boardСellFocusY = boardСell.getAttribute('data-y');
-        console.log(this.boardСellFocusX);
-        console.log(this.boardСellFocusY);
 
         this.core.click(boardСell);
-
-        console.debug("X: " + this.boardСellFocusX + "; Y: " + this.boardСellFocusY);
     }
 
     keyBoardControl() {
 
         document.addEventListener('keydown', (event) => {
+
+            console.debug(event.metaKey);
             let limitationBoard = this.core.limitationBoard(this.boardСellFocusX, this.boardСellFocusY);
 
             if ((event.code == "KeyW" || event.code == 'ArrowUp') && limitationBoard.up) {
@@ -58,12 +68,14 @@ export class BoardControl {
                 this.boardСellFocusX++;
                 this.core.squares[this.boardСellFocusY][this.boardСellFocusX][0].focus();
             }
-            if (event.code == 'Enter') {
+            if ((event.code == 'Enter' || event.code == 'Space') && !(event.ctrlKey || event.metaKey)) {
                 this.core.click(this.core.squares[this.boardСellFocusY][this.boardСellFocusX][0]);
             }
-            if (event.code == 'Space') {
+            if ((event.code == 'Enter' || event.code == 'Space') && (event.ctrlKey || event.metaKey)) {
                 this.core.addFlag(this.core.squares[this.boardСellFocusY][this.boardСellFocusX][0]);
             }
+
+            // ctrlKey
         });
     }
 }

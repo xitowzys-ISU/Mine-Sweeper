@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-  mode: 'development', //production
+  mode: 'development', //development
   entry: './app/CommonJs/Build.js',
   output: {
     path: path.resolve(__dirname, 'dist'),

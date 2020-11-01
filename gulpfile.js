@@ -141,13 +141,16 @@ gulp.task('dist', function () {
 	]).pipe(gulp.dest('dist/css'));
 
 	var buildJs = gulp.src([
-		'app/js/scripts.min.js',
+		'app/js/script.min.js',
 	]).pipe(gulp.dest('dist/js'));
 
 	var buildFonts = gulp.src([
 		'app/fonts/**/*',
 	]).pipe(gulp.dest('dist/fonts'));
 
+	var buildLibs = gulp.src([
+		'app/libs/**/*',
+	]).pipe(gulp.dest('dist/libs'));
 
 	return buildFiles, buildCss, buildJs, buildFonts;
 

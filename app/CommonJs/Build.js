@@ -1,13 +1,16 @@
+import {MenuGame} from "./MenuGame";
 import {RunMineSweeper} from "./RunMineSweeper";
 import {BoardControl} from "./BoardControl";
 import {Core} from "./Core";
+
+const _MenuGame = new MenuGame();
 
 const _RunMineSweeper = new RunMineSweeper();
 const runButton = document.querySelector('.settingsGame > input');
 
 let settingsGame;
 
-runButton.addEventListener('click', function() {
+runButton.addEventListener('click', () => {
 
     settingsGame = _RunMineSweeper.runGame();
 
@@ -24,5 +27,7 @@ function CreateBoard() {
 
     // Модуль управления мышью и клавиатурой
     const _BoardControl = new BoardControl(MineSweeper);
+
+    
 }
 

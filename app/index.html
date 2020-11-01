@@ -15,28 +15,36 @@
             <img src="./images/logo.png" alt="альтернативный текст">
             <p>Готовые настройки</p>
             <div class="settingsGameFlexInline">
-                <input class="btn btnLevel btnEasy" onclick="document.querySelector('.parent_popup').style.display='none';" type="button" value="Легкий">
-                <input class="btn btnLevel btnMedium" onclick="document.querySelector('.parent_popup').style.display='none';" type="button" value="По лайту">
-                <input class="btn btnLevel btnHard" onclick="document.querySelector('.parent_popup').style.display='none';" type="button" value="Хардкор">
+                <input class="btn btnLevel btnEasy" name="easy" type="button" value="Легкий">
+                <input class="btn btnLevel btnMedium" name="medium" type="button" value="По лайту">
+                <input class="btn btnLevel btnHard" name="hard" type="button" value="Хардкор">
             </div>
             <div class="settingsGameFlexInline">
                 <div>
                     <p>Ширина</p>
-                    <input type="text" name="" disabled>
-                    <input type="range" name="volume" min="2" max="28" value="12">
+                    <input type="number" max="28">
+                    <input type="range" name="volume" min="2" max="28" value="14">
                 </div>
                 <div>
                     <p>Высота</p>
-                    <input type="text" name="" disabled>
-                    <input type="range"  name="volume" min="2" max="18" value="12">
+                    <input type="number" max="18">
+                    <input type="range"  name="volume" min="2" max="16" value="14">
                 </div>
                 <div>
                     <p>Количество бомб</p>
-                    <input type="text" name="" disabled>
-                    <input type="range" name="volume" min="1" max="144" value="1">
+                    <input type="number" max="504">
+                    <input type="range" name="volume" min="1" max="504" value="50">
                 </div>
             </div>
             <input class="btn btnSubmit" type="button" value="Начать игру">
+        </div>
+    </div>
+
+    <div class="resultGameContainer">
+        <div class="resultGame"> 
+            <p>Ты проиграл</p>
+            <p>00:00</p>
+            <input class="btn btnMenu" type="button" value="Вернуться в меню" onclick="location.reload();">
         </div>
     </div>
 
